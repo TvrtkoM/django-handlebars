@@ -18,6 +18,16 @@ def handlebars_scripts():
     "base": appsettings.SCRIPT_URL,
     "renderer": "handlebars.runtime.js" if appsettings.COMPILED else "handlebars.js",}
 
+@register.simple_tag()
+def ember_scripts():
+    return '''
+<script> var handlebars_config = %(conf)s;</script>
+<script src="%(base)shandlebars.js"></script>
+<script src="%(base)shandlebars.django.js"></script>
+<script src="%(base)sjquery.min.js"></script>
+<script src="%(base)sember.js"></script>''' % {
+    "conf": simplejson.dumps(appsettings.SCRIPT_CONF), 
+    "base": appsettings.SCRIPT_URL,}
 
 @register.simple_tag()
 def handlebars_template(name):

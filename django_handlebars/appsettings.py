@@ -15,7 +15,7 @@ path = lambda p: os.path.join(root, p[:-1] if p.endswith("/") else p)
 
 __all__ = ("NUM_THREADS", "COMPILED",
     "TPL_DIR", "TPL_CMPDIR", "TPL_MASK", "TPL_URL", "TPL_JSWRAPPER",
-    "SCRIPT_PATH", "SCRIPT_EXTRAS", "SCRIPT_TPL",)
+    "SCRIPT_PATH", "SCRIPT_EXTRAS", "SCRIPT_TPL", "EMBER")
 
 # Tells whether compiled or or raw templates should be used in browser
 # By default it assumes True if required packages installed
@@ -62,12 +62,17 @@ SCRIPT_EXTRAS = []
 # This will be gone in the next version 
 SCRIPT_TPL = "Handlebars.tpl('%(namespace)s', %(compiled)s);"
 
+EMBER = True
+
 loacal_vars = locals()
 for var in __all__:
     global_var = "HANDLEBARS_%s" % var
     if hasattr(settings, global_var):
         loacal_vars[var] = getattr(settings, global_var)
-        
+
+if EMBER:
+    SCRIPT_TPL = "Ember." + SCRIPT_TPL
+
 SCRIPT_CONF = {
     "loadurl": (TPL_CMPURL if COMPILED else TPL_URL) % '{tpl}',
 }

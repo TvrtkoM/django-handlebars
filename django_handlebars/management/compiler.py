@@ -53,7 +53,10 @@ class Compiler(object):
 
         jsruntime = spidermonkey.Runtime()
         handlebars_scripts = ''
-        for script in ['handlebars.js',] + script_extras:
+        scripts = ['handlebars.js',]
+        if appsettings.EMBER:
+            scripts += ['fake.js', 'ember.js']
+        for script in scripts + script_extras:
             script_item_path = os.path.join(script_path, script)
             if not os.access(script_item_path, os.R_OK):
                 self.console.err('<color:red>Can not read script<color:reset> "%s"' % script_item_path)
@@ -208,7 +211,9 @@ class CompileWorker(Thread):
         with open(src_path, "r") as f:
             src = f.read()
             try:
-                compiled = self.jscontext.execute("Handlebars.precompile")(src)
+                command = "Ember.Handlebars.precompile" if appsettings.USE_EMBER else "Handlebars.precompile"
+                compiled = self.jscontext.execute("Ember.Handlebars.precompile")(src)
+                compiled = str(compiled) if not isinstance(compiled, basestring) else compiled
             except spidermonkey.JSError as err:
                 self.console.err("<color:red>Failed to compile<color:reset> %s:\n%s" % (short_path, err.message))
                 return True
