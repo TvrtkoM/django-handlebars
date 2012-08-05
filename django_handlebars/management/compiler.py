@@ -211,7 +211,7 @@ class CompileWorker(Thread):
         with open(src_path, "r") as f:
             src = f.read()
             try:
-                command = "Ember.Handlebars.precompile" if appsettings.USE_EMBER else "Handlebars.precompile"
+                command = "Ember.Handlebars.precompile" if appsettings.EMBER else "Handlebars.precompile"
                 compiled = self.jscontext.execute("Ember.Handlebars.precompile")(src)
                 compiled = str(compiled) if not isinstance(compiled, basestring) else compiled
             except spidermonkey.JSError as err:
