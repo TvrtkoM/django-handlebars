@@ -212,7 +212,7 @@ class CompileWorker(Thread):
             src = f.read()
             try:
                 command = "Ember.Handlebars.precompile" if appsettings.EMBER else "Handlebars.precompile"
-                compiled = self.jscontext.execute("Ember.Handlebars.precompile")(src)
+                compiled = self.jscontext.execute(command)(src)
                 compiled = str(compiled) if not isinstance(compiled, basestring) else compiled
             except spidermonkey.JSError as err:
                 self.console.err("<color:red>Failed to compile<color:reset> %s:\n%s" % (short_path, err.message))
